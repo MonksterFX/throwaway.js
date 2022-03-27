@@ -1,0 +1,12 @@
+# dotty files
+.git
+.env
+.DS_Store
+.vscode
+
+# exclude builds etc
+dist
+node_modules
+
+# single fancy folders
+playground
