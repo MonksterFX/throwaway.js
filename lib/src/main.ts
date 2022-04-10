@@ -13,7 +13,7 @@ export async function createThrowAway(
   const pass = passphrase || createRandomPassphrase();
 
   // create encrypted message
-  const encryptedNote = createEncryptedNote(pass, msg, payload);
+  const encryptedNote = await createEncryptedNote(pass, msg, payload);
 
   // add notification mail
   encryptedNote.note.notification = notification;
@@ -23,7 +23,7 @@ export async function createThrowAway(
   await client.createNote(encryptedNote.storageKey, encryptedNote.note);
 
   // return iv and passphrase (only if automatically generated) for url creation
-  return [encryptedNote.iv.toString('hex'), passphrase ? undefined : pass];
+  return [encryptedNote.iv, passphrase ? undefined : pass];
 }
 
 export async function redeemThrowAway(
@@ -34,7 +34,7 @@ export async function redeemThrowAway(
   // TODO: token should not be IV
 
   // calculate storage key
-  const id = createStorageKey(passphrase, token);
+  const id = await createStorageKey(passphrase, token);
 
   // fetch encrpyted note from server
   const client = new ThrowAwayClient(baseUrl);

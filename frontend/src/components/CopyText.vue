@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ClipboardIcon } from "@heroicons/vue/solid";
 
-defineProps<{
+const props = defineProps<{
   label: string;
   value: string;
 }>();
+
+
+async function copy(){
+  navigator.clipboard.writeText(props.value).then(()=>{console.info('successfully copy to clipboard')}).catch(()=>{console.error('could not copy to clipboard')})
+}
+
 </script>
 
 <template>
@@ -38,10 +44,9 @@ defineProps<{
           pr-3
           flex
           items-center
-          pointer-events-none
         "
       >
-        <ClipboardIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+        <ClipboardIcon class="h-5 w-5 text-gray-400" aria-hidden="true" onclick="copy()"/>
       </div>
     </div>
   </div>

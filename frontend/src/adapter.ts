@@ -1,3 +1,5 @@
+import { createThrowAway, redeemThrowAway } from '../../lib/src/lib';
+
 interface Note {
   passphrase: string;
   note: string;
@@ -9,10 +11,7 @@ const backendURL = 'http://localhost:5000/api/v1';
 const frontenURL = 'http://localhost:3000';
 
 export async function createNote(note: Note) {
-  // TODO: Remove dirty hack for sideload throwAway
-  const [token, pass]: [string, string | undefined] = await (
-    window as any
-  ).throwAway.createThrowAway(
+  const [token, pass]: [string, string | undefined] = await createThrowAway(
     note.passphrase,
     note.note,
     note.payload,
@@ -24,11 +23,7 @@ export async function createNote(note: Note) {
 }
 
 export async function redeemNote(passphrase: string, token: string) {
-  // TODO: Remove dirty hack for sideload throwAway
-  const result = await (window as any).throwAway.redeemThrowAway(
-    passphrase,
-    token
-  );
+  const result = await redeemThrowAway(passphrase, token);
 
   console.debug(result);
 

@@ -1,4 +1,10 @@
-import { createIV, createStorageKey, decrypt, encrypt } from './crypto';
+import {
+  createIV,
+  createStorageKey,
+  decrypt,
+  encrypt,
+  toHexString,
+} from './crypto';
 
 export type Note = {
   msg: string;
@@ -8,31 +14,33 @@ export type Note = {
   created?: Date;
 };
 
-export function createEncryptedNote(
+export async function createEncryptedNote(
   passphrase: string,
   msg: string,
   payload: string
-): { note: Note; storageKey: string; iv: Buffer } {
+): Promise<{ note: Note; storageKey: string; iv: string }> {
   const iv = createIV();
 
+  const encryptedMessage = await encrypt(passphrase, msg, { iv });
+
   const note = {
-    msg: encrypt(passphrase, msg, { iv }).payload,
-    payload: encrypt(passphrase, payload, { iv }).payload,
+    msg: encryptedMessage.payload,
+    payload: '',
   };
 
-  const storageKey = createStorageKey(passphrase, iv.toString('hex'));
+  const storageKey = await createStorageKey(passphrase, toHexString(iv));
 
-  return { note: note, storageKey: storageKey, iv };
+  return { note: note, storageKey: storageKey, iv: toHexString(iv) };
 }
 
-export function decryptNote(
+export async function decryptNote(
   passphrase: string,
   iv: string,
   ecryptedNote: Note
-): Note {
+): Promise<Note> {
   const note = {
-    msg: decrypt(passphrase, { iv, payload: ecryptedNote.msg }),
-    payload: decrypt(passphrase, { iv, payload: ecryptedNote.payload }),
+    msg: await decrypt(passphrase, { iv, payload: ecryptedNote.msg }),
+    payload: '',
   };
 
   return note;

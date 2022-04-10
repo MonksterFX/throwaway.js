@@ -7,16 +7,46 @@ import 'express-async-errors';
 // needed for class transformer class
 import 'reflect-metadata';
 
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+import path from 'path';
+
+// middlewares
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+
+// for rate limiting requests
+import rateLimit from 'express-rate-limit';
+
+// for history mode in vue.js
+import history from 'connect-history-api-fallback';
+
 import { initRedis } from './redis';
 import { noteRouter } from './routers';
-import cors from 'cors';
 
 export const app = express();
+
+// Fixing issues with rate limiting
+// https://github.com/nfriedly/express-rate-limit#troubleshooting-proxy-issues
+app.set('trust proxy', 1);
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({ origin: true }));
+app.use(helmet());
+app.use(morgan('combined'));
+
+// TODO: add logger
+
+// add rate limit
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 15, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: true, // Disable the `X-RateLimit-*` headers
+});
+
+app.use(limiter);
 
 // prefix all with api v1
 const mainRouter = express.Router();
@@ -32,11 +62,17 @@ app.get('/pour/coffe', (req, res, next) => {
   res.status(419);
 });
 
-// TODO: generic error handler
+// serve vue application
+// https://github.com/bripkens/connect-history-api-fallback/tree/master/examples/static-files-and-index-rewrite
+app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(history());
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// TODO: security header cors helmet etc.
-
-// TODO: add logger
+// generic error handler
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack);
+  res.status(500).send();
+});
 
 // TODO: gracefully shutdown, https://github.com/gajus/lightship#lightship-usage-examples-using-with-express-js
 
@@ -52,7 +88,7 @@ export async function start() {
   return server;
 }
 
-// TODO: just start server if this is the main file
+// just start server if this is the main file
 if (require.main === module) {
   start();
 }
