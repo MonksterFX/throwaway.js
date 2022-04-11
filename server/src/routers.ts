@@ -29,7 +29,7 @@ noteRouter.put(
     }
 
     await client.set(storageKey, JSON.stringify(instanceToPlain(note)), {
-      EX: 24 * 3600,
+      EX: parseInt(process.env.MSG_TTL || '24') * 3600,
     });
 
     res.send();

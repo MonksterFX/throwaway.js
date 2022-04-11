@@ -29,7 +29,7 @@ export async function createThrowAway(
 export async function redeemThrowAway(
   passphrase: string,
   token: string,
-  baseUrl?: string
+  baseUrl: string
 ): Promise<Note> {
   // TODO: token should not be IV
 

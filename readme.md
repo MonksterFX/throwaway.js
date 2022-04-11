@@ -1,14 +1,14 @@
 # throwAway.js
 
-Share Client Side Encrypted Notes
+Share Client Side Encrypted Notes - [DEMO](https://notes.mrmonk.dev/?from=github)
 
-## motivation
+## Motivation
 
 Secrets are shared widly by mail or in messengers. This is very bad, because often that channels are not encrypted (email) or it is impossible to delete content from them.
 
 More on this project is documented at my blog: [mrmonk.dev - throwAway.js](https://mrmonk.dev)
 
-## content of this repro
+## Content Of This Repro
 
 This repository contains 3 projects:
 
@@ -16,7 +16,7 @@ This repository contains 3 projects:
 - lib -> Browser Library
 - frontend -> Simple Vue UI
 
-## requirements
+## Requirements
 
 **Features**
 
@@ -35,6 +35,12 @@ This repository contains 3 projects:
 
 - dockerized
 - ui included
+
+## Build Docker Image
+
+You can easily build the standalone server (express + ui + lib) with the following command. If you want to build for production config (UI) just profide build arg VITE_MODE.
+
+`"docker build -t <tag> ."` or `"docker build -t <tag> --build-arg VITE_MODE=<mode> ."`
 
 ## Licence & Warranty
 
