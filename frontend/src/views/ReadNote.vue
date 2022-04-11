@@ -62,14 +62,14 @@ onMounted(() => {
     <div>
       <TextArea :readonly="true" label="Note" :rows="2" v-model="form.note" />
     </div>
-    <div>
+    <!-- <div>
       <TextArea
         label="Payload"
         v-model="form.payload"
         :readonly="true"
         :rows="10"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 <style>

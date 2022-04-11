@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  throwaway:
+    image: throwaway
+    build: .
+    container_name: throwaway-standalone
+    environment:
+      - PORT=5000
+      - REDIS_URL=redis://:@throwaway-redis:6379
+    ports:
+      - 5000:5000
+
+  redis:
+    image: bitnami/redis
+    container_name: throwaway-redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
