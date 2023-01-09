@@ -6,7 +6,7 @@ Share Client Side Encrypted Notes - [DEMO](https://notes.mrmonk.dev/?from=github
 
 Secrets are shared widly by mail or in messengers. This is very bad, because often that channels are not encrypted (email) or it is impossible to delete content from them.
 
-More on this project is documented at my blog: [mrmonk.dev - throwAway.js](https://mrmonk.dev)
+More on this project is documented at my blog: [mrmonk.dev - throwAway.js](https://mrmonk.dev/blog/projects/microtools/throw-away-js/)
 
 ## Content Of This Repro
 
